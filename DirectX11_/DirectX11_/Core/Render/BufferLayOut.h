@@ -1,6 +1,6 @@
 #pragma once
 
-class MatrixBuffer : public ConstantsBuffer
+class MatrixBuffer : public ConstantBuffer
 {
 public:
 	struct Data
@@ -8,16 +8,38 @@ public:
 		XMMATRIX matrix = XMMatrixIdentity();
 	};
 
-	MatrixBuffer
-		:ConstantBuffer(&_data, sizeof(Data))
+	MatrixBuffer()
+	: ConstantBuffer(&_data, sizeof(Data))
 	{
-
 	}
 	~MatrixBuffer() {}
 
-	void SetData(XMMATRTIX value)
+	void SetData(XMMATRIX value)
 	{
-		data.matrix = XMMatrix
+		_data.matrix = XMMatrixTranspose(value);
+	}
+
+private:
+	Data _data;
+};
+
+class ColorBuffer : public ConstantBuffer
+{
+public:
+	struct Data
+	{
+		XMFLOAT4 color;
+	};
+
+	ColorBuffer()
+	: ConstantBuffer(&_data, sizeof(Data))
+	{
+	}
+	~ColorBuffer() {}
+
+	void SetData(XMFLOAT4 value)
+	{
+		_data.color = value;
 	}
 
 private:

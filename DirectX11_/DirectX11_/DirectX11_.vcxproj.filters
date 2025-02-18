@@ -5,55 +5,51 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="DirectX11_.h">
+      <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="framework.h">
+      <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX11_.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="targetver.h">
+      <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Device.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Texture\SRV.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Texture\SampleState.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Render\PixelShader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Contents\Quad.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Render\ConstantsBuffer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Program\Program.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Render\BufferLayOut.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\Vector.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
+    <ClInclude Include="Core\Device.h" />
+    <ClInclude Include="Core\Render\VertexLayout.h" />
+    <ClInclude Include="Core\Render\VertexBuffer.h" />
+    <ClInclude Include="Core\Render\VertexShader.h" />
+    <ClInclude Include="Core\Render\PixelShader.h" />
+    <ClInclude Include="Core\Texture\SamplerState.h" />
+    <ClInclude Include="Core\Texture\SRV.h" />
+    <ClInclude Include="Program\Program.h" />
+    <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="Scene\TutorialScene.h" />
+    <ClInclude Include="Contents\Quad.h" />
+    <ClInclude Include="Core\Render\BufferLayOut.h" />
+    <ClInclude Include="Core\Render\ConstantBuffer.h" />
+    <ClInclude Include="Math\Vector.h" />
+    <ClInclude Include="Math\Transform.h" />
+    <ClInclude Include="Scene\SolarSystemScene.h" />
+    <ClInclude Include="Core\Texture\BlendState.h" />
+    <ClInclude Include="Core\Texture\StateManager.h" />
+    <ClInclude Include="GMacro.h" />
+    <ClInclude Include="Core\Render\IndexBuffer.h" />
+    <ClInclude Include="Scene\BowScene.h" />
+    <ClInclude Include="Contents\ArrowScene\Arrow.h" />
+    <ClInclude Include="Math\Collider\RectCollider.h" />
+    <ClInclude Include="Math\Collider\CircleCollider.h" />
+    <ClInclude Include="Scene\CollisionScene.h" />
+    <ClInclude Include="Utility\InputManager.h" />
+    <ClInclude Include="Utility\TimeManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX11_.cpp">
@@ -65,22 +61,73 @@
     <ClCompile Include="Core\Device.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Texture\SRV.cpp">
+    <ClCompile Include="Core\Render\VertexLayout.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Texture\SampleState.cpp">
+    <ClCompile Include="Core\Render\VertexBuffer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Render\VertexShader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Render\PixelShader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Contents\Quad.cpp">
+    <ClCompile Include="Core\Texture\SamplerState.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Render\ConstantsBuffer.cpp">
+    <ClCompile Include="Core\Texture\SRV.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Program\Program.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Scene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\TutorialScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Contents\Quad.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Render\ConstantBuffer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Transform.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SolarSystemScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Texture\BlendState.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Texture\StateManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Render\IndexBuffer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\BowScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Contents\ArrowScene\Arrow.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Collider\RectCollider.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Collider\CircleCollider.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\CollisionScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\InputManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\TimeManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -96,20 +143,24 @@
     <Image Include="DirectX11_.ico">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="resource\sample.png">
+    <Image Include="Resource\SCS.png">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="resource\earth.png">
+    <Image Include="Resource\earth.png">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="resource\moon.png">
+    <Image Include="Resource\moon.png">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="resource\sun.png">
+    <Image Include="Resource\sun.png">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\TutorialShader.hlsl" />
+    <FxCompile Include="Shader\TextureVertexShader.hlsl" />
+    <FxCompile Include="Shader\TexturePixelShader.hlsl" />
+    <FxCompile Include="Shader\ColliderVertexShader.hlsl" />
+    <FxCompile Include="Shader\ColliderPixelShader.hlsl" />
   </ItemGroup>
 </Project>

@@ -27,41 +27,51 @@
 
 #include "../DirectXTex/DirectXTex.h"
 
-#pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "d3dcompiler.lib")
+#pragma comment(lib,"d3d11.lib")
+#pragma comment(lib,"d3dcompiler.lib")
 
 using namespace std;
 using namespace DirectX;
 
-// 프로젝트 참조
-
-// 정적라이브러리
-// A에서 B에 있는 함수들을 쓰고 싶다
-// => B를 정적라이브러리로 만든다
-// ==> B를 실행시켜서 빌드 파일을 만들고
-// => A에게 전달해준다
-// .lib
+// Math
+#include "Math/Vector.h"
+#include "Math/Transform.h"
 
 // Framework
 #include "Core/Device.h"
+#include "Core/Render/VertexLayout.h"
+#include "Core/Render/VertexBuffer.h"
+#include "Core/Render/IndexBuffer.h"
+#include "Core/Render/VertexShader.h"
 #include "Core/Render/PixelShader.h"
-#include "Core/Render/"
+#include "Core/Texture/SamplerState.h"
+#include "Core/Texture/BlendState.h"
+#include "Core/Texture/StateManager.h"
+#include "Core/Texture/SRV.h"
 
 // Matrix
+#include "Core/Render/ConstantBuffer.h"
+#include "Core/Render/BufferLayOut.h"
+
+// Utility
+#include "Utility/InputManager.h"
+#include "Utility/TimeManager.h"
+
+// Collider
+#include "Math/Collider/RectCollider.h"
+#include "Math/Collider/CircleCollider.h"
 
 // Bagic Obj
+#include "Contents/Quad.h"
 
 // Scene
+#include "Scene/Scene.h"
 
 // Program
 #include "Program/Program.h"
 
-extern HWND hWnd;
-
 // Macro
-#define DEVICE  Device::Instance()->GetDevice()
-#define DC		Device::Instance()->GetDC()
-#define RTV		Device::Instance()->GetRTV()
+#include "GMacro.h"
 
-#define WIN_WIDTH	1200
-#define WIN_HEIGHT	720
+extern HWND hWnd;
+extern Vector mousePos;

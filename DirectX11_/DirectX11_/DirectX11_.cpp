@@ -6,64 +6,8 @@
 
 #define MAX_LOADSTRING 100
 
-// Direct X : Direct Access
-// => 하드웨어에 직접 접근을 도와주는 API를 제공해준다 (GPU)
-
-// CPU vs GPU
-// - GPU는 연산장치의 개수가 CPU보다 월등하게 많다
-// - GPU 연산장치는 단순한 계산 처리에 특화되어있다
-// ==> CPU(교수님 한명) vs GPU(초등학생 만명)
-
-// WIN_API => 픽셀찍어서 그리기 (DIrectX도 기본적으로 똑같다. 하지만 GPU가 대신해준다)
-// 화면 해상도 : 1920 x 1080개수의 픽셀 계산을 CPU가 하는것이 효윻적인가?
-// => 초등학생 1만명한테 맡기겠다
-
-// DX2D => 게임엔진 만들기 (유니티같은거)
-// 영화 촬영
-// 총감독 / 프로그래머
-// 영화사 / 게임엔진
-// 세트장 / world
-// 카메라 / 카메라
-// 배우 / actor
-// 조명 / light
-
-// 렌더링파이프라인(3차원 가상에 있는 점들의 집합(매쉬)을 우리가 모니터(2차원)으로 어떻게 변환되는지에 대한 간계)
-
-// com 객체
-// -동적할당율 Create/Release
-
-// 인력사무소장
-// 외주를 맡기고 실질적인 공사 대표 뽑기
-// 컴퓨터 하드웨어 기능 점검, 리소스 할당(하드웨어 접근에 필요한 리소스 할당)
-Microsoft::WRL::ComPtr<ID3D11Device> device;
-
-// 연출감독
-// 세트장을 실질적으로 꾸며주는 연출가
-// 렌더링 대상 결정(어따 그릴지, 얼마나 그릴지 결정)
-// -> 리소스를 그래픽 파이프라인에 바인딩, GPU가 수행할 명령을 지시한다
-Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
-
-// 렌더링파이프라인 단계
-Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
-Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
-Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
-Microsoft::WRL::ComPtr<D3D11InputLayout> inputLayout;
-
-// 텍스쳐 맵핑 : 판박이
-Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceView; // SRV -> 판박이 만드는 아저씨
-Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState; // sampler -> 판박이 붙이는 아저씨
-
 HWND hWnd;
 
-struct Vertex
-{
-    Vertex() {}
-    Vertex(XMFLOAT3 pos) :
-
-    XMFLOAT3 pos;
-};
-
-void InitDevice();
 void Render();
 
 // 전역 변수:
@@ -100,32 +44,40 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_DIRECTX11));
 
-    InitDevice();
+    // 생성
+    Device::Create();
+    StateManager::Create();
+    InputManager::Create();
+
+    shared_ptr<Program> program = make_shared<Program>();
 
     MSG msg = {};
 
-     while (msg.message != WM_QUIT)
+    while (msg.message != WM_QUIT)
     {
-         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-         {
-             if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-             {
-                 TranslateMessage(&msg);
-                 DispatchMessage(&msg);
-             }
-         }
-         else
-         {
-             // 최적화
-             //메인루프
-             Render();
-         }
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+        {
+            if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+            {
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
+        }
+        else
+        {
+            // 최적화
+            // 메인루프
+            program->Update();
+            program->Render();
+        }
     }
+
+    InputManager::Delete();
+    StateManager::Delete();
+    Device::Delete();
 
     return (int) msg.wParam;
 }
-
-
 
 //
 //  함수: MyRegisterClass()
@@ -167,8 +119,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+   RECT rc = {0,0,WIN_WIDTH,WIN_HEIGHT};
+   AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, false);
+
+   hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+      0, 0, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
@@ -177,6 +132,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
+
+   SetMenu(hWnd, nullptr);
 
    return TRUE;
 }
@@ -191,6 +148,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
 //
 //
+
+Vector mousePos;
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -212,6 +172,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
         }
         break;
+
+    case WM_MOUSEMOVE:
+        {
+            mousePos.x = static_cast<float>(LOWORD(lParam));
+            mousePos.y = WIN_HEIGHT - static_cast<float>(HIWORD(lParam));
+        }
+        break;
+
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
@@ -249,90 +217,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     return (INT_PTR)FALSE;
 }
 
-void InitDevice()
-{
-    RECT rc;
-    GetClientRect(hWnd, &rc);
-    UINT width = rc.right - rc.left;
-    UINT height = rc.bottom - rc.top;
-
-    D3D_FEATURE_LEVEL featureLevels[] =
-    {
-        D3D_FEATURE_LEVEL_11_0,
-        D3D_FEATURE_LEVEL_10_1,
-        D3D_FEATURE_LEVEL_10_0,
-
-    };
-
-    UINT featureSize = ARRAYSIZE(featureLevels);
-
-    DXGI_SWAP_CHAIN_DESC sd = {};
-    sd.BufferCount = 1;
-    sd.BufferDesc.with = with;
-    sd.BufferDesc.Height = height;
-    sd.BufferDesc.format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    sd.BufferDesc.RefreshRate.Numerator = 60;
-    sd.BufferDesc.RefreshRate.Denominator = 1;
-    // 화면 프레임 갱신 속도
-    sd.BufferUsage = DXGI_USAGE;
-
-    // 렌더링파이프라인
-
-    D3D11_INPUT_ELEMENT_DESC layOut[] =
-    {
-        {
-            "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0
-            D3D11_INPUT_PER_VERTEX_DATA,0
-        },
-        {
-            "UV",0,DXGI_FORMAT_R32G32_FLOAT,0,12 // POSITION SE
-            DD3D11_INPIT_PER_VERTEX_DATA,0
-        }
-    };
-
-
-    Micosoft::WRL::ComPtr<ID3Blob> pixelBlob;
-    D3DCopmileFromFile(L"shader/TutoricalShader.hlsl", nullptr, nullptr,
-        "VS", "vs_5_0", flags, 0, vertexBlob.GetAddressOOf(), nullptr;
-
-    // 판박이 아저씨들
-    // Texture 준비, Shader에 넘기는 작업
-    ScratchImage image;
-    wstring psth = L"Resource/Sample.png";
-    LoadFromWICFile(path.c_str(), WWIC_FLAGS_NONE, nullptr, image);
-
-    CreateShaderResourceView(device.Get(), image.GetImages(), image.GetImageCount(), image.GetMetadata(), 
-    IN shaderResourceView.ReleaseAndGetAddressOf());
-
-    D3D11_SAMPLER_DESC sampDesc = {};
-    sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-}
-
 void Render()
 {
-    // 바탕화면
-    FLOAT myColorR = 0.0f;
-    FLOAT myColorG = 0.0f;
-    FLOAT myColorB = 0.0f;
 
-    FLOAT clearColor[4] = { myColorR, myColorG, myColorB, 1.0f };
-
-    deviceContext->ClearRenderTargetView(renderTargetView.Get(), clearColor);
-
-    // IA : Input Assembler : 입력 병합
-    deviceContext->IASetInputLayout(inputLayout.Get());
-
-    UINT stride = sizeof(vertex);
-    UINT offset = 0;
-    deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
-    deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    deviceContext->PSSetShaderResource()
-    deviceContext->PSSetSamplers(0, 1, samplerState.GetAddressOf());
-
-
-    deviceContext->VSSetShader
 }
